@@ -1,26 +1,23 @@
-# This playbook deploys a full validator from scratch including downloading a db backup.
-# Update the DB download link and checksum in the host_vars first!
+# This playbook deploys a full khala mining pool
+# You will need to register the pool and the workers afterward
 ---
-- name: setup
-  hosts: polkadot
+- name: Setup node
+  hosts: node
   become: yes
   roles:
-  - polkadot-setup
+    - basic-setup
+    - khala-node
 
-- name: Setup polkadot
-  hosts: polkadot
+- name: Setup prb
+  hosts: prb
   become: yes
   roles:
-    - polkadot-restore-db
-    - polkadot-validator
-    - polkadot-claimer
-    - polkadot-rotate-keys
+    - khala-node
 
-- name: Setup kusama
-  hosts: kusama
+- name: Setup worker
+  hosts: worker
   become: yes
   roles:
-    - polkadot-restore-db
-    - polkadot-validator
-    - polkadot-claimer
-    - polkadot-rotate-keys
+    - basic-setup
+    - setup-sgx
+    - khala-worker
