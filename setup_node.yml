@@ -1,0 +1,6 @@
+---
+- name: setup-node
+  hosts: node
+  become: yes
+  roles:
+  - khala-node

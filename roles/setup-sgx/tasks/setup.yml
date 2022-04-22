@@ -1,0 +1,18 @@
+---
+- name: Install required system packages
+  apt: name={{ item }} state=latest update_cache=yes
+  loop: [ 'apt-transport-https', 'ca-certificates', 'curl', 'software-properties-common', 'python3-pip', 'virtualenv', 'python3-setuptools', 'jq', 'curl', 'wget', 'dkms']
+
+- name: Add Docker GPG apt Key
+  apt_key:
+    url: https://download.01.org/intel-sgx/sgx_repo/ubuntu/intel-sgx-deb.key
+    state: present
+
+- name: Add Docker Repository
+  apt_repository:
+    repo: deb [arch=amd64] https://download.01.org/intel-sgx/sgx_repo/ubuntu/ bionic stable
+    state: present
+
+- name: Update apt and install intel-sgx-dkms & enclave libs
+  apt: name={{ item }} state=latest
+  loop: [ 'intel-sgx-dkms', 'libsgx-enclave-common']

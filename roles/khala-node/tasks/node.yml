@@ -1,0 +1,54 @@
+---
+- name: Clean running node
+  docker_container:
+    name: 'node'
+    state: absent
+  ignore_errors: yes
+
+- name: Setup data path
+  file:
+    path: '/root/khala'
+    state: directory
+
+- name: Create a shared docker network
+  docker_network:
+    name: khala-node
+
+- name: Spin up docker
+  docker_compose:
+    project_name: 'node'
+    pull: yes
+    definition:
+        version: "3"
+        services:
+          node:
+            image: phalanetwork/khala-node:latest
+            container_name: node
+            hostname: node
+            restart: always
+            ports:
+            - "127.0.0.1:9615:9615"
+            - "127.0.0.1:9616:9616"
+            - "127.0.0.1:9944:9944"
+            - "127.0.0.1:9945:9945"
+            - "30333:30333"
+            - "30334:30334"
+            environment:
+            - NODE_NAME={{ inventory_hostname }}
+            - NODE_ROLE=MINER
+            volumes:
+            - /root/khala:/root/data
+            hostname: 'node'
+            restart: unless-stopped
+        networks: 
+          default: 
+            external: 
+              name: khala-node
+  register: output
+
+- ansible.builtin.debug:
+    var: output
+
+- ansible.builtin.assert:
+    that:
+        - "output.services.node.node.state.running"

@@ -1,0 +1,187 @@
+---
+- name: Clean running prb containers
+  docker_container:
+    name: '{{ item }}'
+    state: absent
+  ignore_errors: yes
+  loop: ['prb_data_provider_1','prb_monitor_1','prb_redis_1','prb_arena_1','prb_trade_1','prb_lifecycle_1']
+
+- name: Setup data path
+  file:
+    path: '/root/khala'
+    state: directory
+
+- name: Create a shared docker network
+  docker_network:
+    name: khala-node
+
+- name: Spin up docker
+  docker_compose:
+    project_name: 'prb'
+    pull: yes
+    definition:
+        version: "3"
+        x-defaults: &defaults
+          volumes: &default-volume-config
+            - /root/khala/prb_data:/var/data
+        services:
+          data_provider:
+            image: phalanetwork/prb:next
+            hostname: data_provider
+            restart: always
+            volumes: *default-volume-config
+            logging:
+              options:
+                max-size: "500m"
+            environment:
+              - PHALA_MODULE=data_provider
+              - NODE_ENV=development
+              - PHALA_LOGGER_LEVEL=debug
+              - PHALA_BRIDGE_IDENTITY=staging
+              - PHALA_PARENT_CHAIN_ENDPOINT=ws://node:9945
+              - PHALA_CHAIN_ENDPOINT=ws://node:9944
+              - PHALA_WALKIE_LISTEN_ADDRESSES=/ip4/0.0.0.0/tcp/28888,/ip6/::/tcp/28889
+              - PHALA_WALKIE_BOOT_NODES=/ip4/0.0.0.0/tcp/18888,/ip6/::/tcp/18889
+              - PHALA_LIFECYCLE_BLOB_SERVER_SESSION_MAX_MEMORY=64
+            entrypoint:
+              - "node"
+              - "--trace-warnings"
+              - "--experimental-json-modules"
+              - "--es-module-specifier-resolution=node"
+              - "--harmony-top-level-await"
+              - "dist/index"
+            ports:
+              - "28888:28888"
+              - "28889:28889"
+              - "18888:18888"
+              - "18889:18889"
+          monitor:
+            image: phalanetwork/prb-monitor:next
+            hostname: monitor
+            environment:
+              - NS_FETCH=fetch
+              - NEXT_PUBLIC_NS_LIST=default
+              - PTP_BOOT_NODES=/ip4/127.0.0.1/tcp/28888
+            ports:
+              - "3000:3000"
+          redis:
+            image: redis:alpine
+            hostname: redis
+            restart: always
+            logging:
+              options:
+                max-size: "1g"
+            command: ["redis-server", "--port", "63792", "--appendonly", "no", '--save', '']
+            ports:
+             - "127.0.0.1:63792:63792"
+          arena:
+            image: phalanetwork/prb:next
+            hostname: arena
+            restart: always
+            depends_on:
+              - redis
+            environment:
+              - PHALA_MODULE=utils/arena
+              - NODE_ENV=development
+              - PHALA_LOGGER_LEVEL=debug
+              - PHALA_NAMESPACE=default
+              - REDIS_ENDPOINT=redis://prb_redis_1:63792/
+            ports:
+              - "4567:4567"
+          trade:
+            image: phalanetwork/prb:next
+            hostname: trade
+            restart: always
+            volumes: *default-volume-config
+            logging:
+              options:
+                # max-size: "1g"
+                max-size: "500m"
+            depends_on:
+              - redis
+            environment:
+              - PHALA_MODULE=trade
+              - NODE_ENV=development
+              #- PHALA_DB_NAMESPACE=default
+              #- PHALA_DB_FETCH_NAMESPACE=fetch
+              #- PHALA_DB_ENDPOINT=redis://127.0.0.1:6666
+              - PHALA_LOGGER_LEVEL=debug
+              - PHALA_PARENT_CHAIN_ENDPOINT=ws://node:9945
+              - PHALA_CHAIN_ENDPOINT=ws://node:9944
+              - PHALA_Q_REDIS_ENDPOINT=redis://prb_redis_1:63792/
+            entrypoint:
+              - "node"
+              - "--trace-warnings"
+              - "--experimental-json-modules"
+              - "--es-module-specifier-resolution=node"
+              - "--harmony-top-level-await"
+              # - "--max-old-space-size=10240"
+              - "dist/index"
+          lifecycle:
+            image: phalanetwork/prb:next
+            hostname: lifecycle
+            restart: always
+            depends_on:
+              - redis
+            volumes: *default-volume-config
+            logging:
+              options:
+                max-size: "500m"
+            environment:
+              - PHALA_MODULE=lifecycle
+              - NODE_ENV=development
+              - PHALA_LOGGER_LEVEL=debug
+              - PHALA_BRIDGE_IDENTITY=staging
+              - PHALA_Q_REDIS_ENDPOINT=redis://prb_redis_1:63792/
+              - PHALA_PARENT_CHAIN_ENDPOINT=ws://node:9945
+              - PHALA_CHAIN_ENDPOINT=ws://node:9944      
+              - PHALA_LRU_CACHE_SIZE=50
+              - PHALA_LRU_CACHE_MAX_AGE=90000
+              - PHALA_PRPC_REQUEST_TIMEOUT=60000
+              - PHALA_RUNNER_MAX_WORKER_NUMBER=150
+              # - PHALA_WALKIE_BOOT_NODES=/ip4/<IP of data_provider>/tcp/28888/p2p/<Data provider id as discovered by monitor>
+              - PHALA_WALKIE_BOOT_NODES=/ip4/{{ ansible_default_ipv4.address }}/tcp/28888/p2p/QmY9xUz1YeAKvQiL7ZYHhFQAbTEZDWuK1Qtjcynity58Wr
+              - PHALA_WALKIE_LISTEN_ADDRESSES=/ip4/0.0.0.0/tcp/29888,/ip6/::/tcp/29889
+            mem_swappiness: 70
+            entrypoint:
+              - "node"
+              - "--trace-warnings"
+              - "--experimental-json-modules"
+              - "--es-module-specifier-resolution=node"
+              - "--harmony-top-level-await"
+              - "dist/index"
+            ports:
+              - "29888:29888"
+              - "29889:29889"
+        networks: 
+          default: 
+            external: 
+              name: khala-node
+  register: output
+
+- ansible.builtin.debug:
+    var: output
+
+- ansible.builtin.assert:
+    that:
+        - "output.services.data_provider.prb_data_provider_1.state.running"
+
+- ansible.builtin.assert:
+    that:
+        - "output.services.monitor.prb_monitor_1.state.running"
+
+- ansible.builtin.assert:
+    that:
+        - "output.services.redis.prb_redis_1.state.running"
+
+- ansible.builtin.assert:
+    that:
+        - "output.services.arena.prb_arena_1.state.running"
+
+- ansible.builtin.assert:
+    that:
+        - "output.services.trade.prb_trade_1.state.running"
+
+- ansible.builtin.assert:
+    that:
+        - "output.services.lifecycle.prb_lifecycle_1.state.running"

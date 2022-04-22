@@ -1,0 +1,6 @@
+---
+- name: setup-prb
+  hosts: prb
+  become: yes
+  roles:
+  - khala-prb
