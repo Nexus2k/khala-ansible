@@ -1,6 +1,12 @@
 ﻿# khala-ansible
 Ansible scripts to deploy a khala mining pool.
 
+## ToDo's for contributors
+
+- Integrate [node-angel-v4.sh](https://github.com/zaqhack/crypto-tools/blob/main/bash/node-angel-v4.sh) as node restarter
+- Add some monitoring around prb
+- Update documentation
+
 ## Please Nominate or Tip Me!
 
 * Polkadot: [12Dw4SzhsxX3fpDiLUYXm9oGbfxcbg1Peq67gc5jkkEo1TKr](https://polkadot.subscan.io/waiting/12Dw4SzhsxX3fpDiLUYXm9oGbfxcbg1Peq67gc5jkkEo1TKr) (🍁 HIGH/STAKE 🥩/HEL1 - 2.69% commission)
