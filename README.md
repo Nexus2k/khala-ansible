@@ -1,5 +1,5 @@
-﻿# phala-ansible
-Ansible scripts to deploy a phala mining pool.
+﻿# khala-ansible
+Ansible scripts to deploy a khala mining pool.
 
 ## Please Nominate or Tip Me!
 
