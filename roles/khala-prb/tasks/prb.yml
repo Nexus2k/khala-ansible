@@ -38,8 +38,8 @@
               - NODE_ENV=development
               - PHALA_LOGGER_LEVEL=debug
               - PHALA_BRIDGE_IDENTITY=staging
-              - PHALA_PARENT_CHAIN_ENDPOINT=ws://node:9945
-              - PHALA_CHAIN_ENDPOINT=ws://node:9944
+              - PHALA_PARENT_CHAIN_ENDPOINT=ws://phala-node:9945
+              - PHALA_CHAIN_ENDPOINT=ws://phala-node:9944
               - PHALA_WALKIE_LISTEN_ADDRESSES=/ip4/0.0.0.0/tcp/28888,/ip6/::/tcp/28889
               - PHALA_WALKIE_BOOT_NODES=/ip4/0.0.0.0/tcp/18888,/ip6/::/tcp/18889
               - PHALA_LIFECYCLE_BLOB_SERVER_SESSION_MAX_MEMORY=64
@@ -106,8 +106,8 @@
               #- PHALA_DB_FETCH_NAMESPACE=fetch
               #- PHALA_DB_ENDPOINT=redis://127.0.0.1:6666
               - PHALA_LOGGER_LEVEL=debug
-              - PHALA_PARENT_CHAIN_ENDPOINT=ws://node:9945
-              - PHALA_CHAIN_ENDPOINT=ws://node:9944
+              - PHALA_PARENT_CHAIN_ENDPOINT=ws://phala-node:9945
+              - PHALA_CHAIN_ENDPOINT=ws://phala-node:9944
               - PHALA_Q_REDIS_ENDPOINT=redis://prb_redis_1:63792/
             entrypoint:
               - "node"
@@ -133,8 +133,8 @@
               - PHALA_LOGGER_LEVEL=debug
               - PHALA_BRIDGE_IDENTITY=staging
               - PHALA_Q_REDIS_ENDPOINT=redis://prb_redis_1:63792/
-              - PHALA_PARENT_CHAIN_ENDPOINT=ws://node:9945
-              - PHALA_CHAIN_ENDPOINT=ws://node:9944      
+              - PHALA_PARENT_CHAIN_ENDPOINT=ws://phala-node:9945
+              - PHALA_CHAIN_ENDPOINT=ws://phala-node:9944      
               - PHALA_LRU_CACHE_SIZE=50
               - PHALA_LRU_CACHE_MAX_AGE=90000
               - PHALA_PRPC_REQUEST_TIMEOUT=60000

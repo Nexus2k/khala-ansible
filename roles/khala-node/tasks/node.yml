@@ -1,7 +1,7 @@
 ---
 - name: Clean running node
   docker_container:
-    name: 'node'
+    name: 'phala-node'
     state: absent
   ignore_errors: yes
 
@@ -23,8 +23,8 @@
         services:
           node:
             image: phalanetwork/khala-node:latest
-            container_name: node
-            hostname: node
+            container_name: phala-node
+            hostname: phala-node
             restart: always
             ports:
             - "127.0.0.1:9615:9615"
@@ -44,11 +44,11 @@
           default: 
             external: 
               name: khala-node
-  register: output
 
-- ansible.builtin.debug:
-    var: output
+- docker_container_info:
+    name: phala-node
+  register: output
 
 - ansible.builtin.assert:
     that:
-        - "output.services.node.node.state.running"
+        - 'output.container.State.Status == "running"'

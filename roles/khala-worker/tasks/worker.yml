@@ -1,0 +1,49 @@
+---
+- name: Clean running worker
+  docker_container:
+    name: 'pruntime'
+    state: absent
+  ignore_errors: yes
+
+- name: Setup data path
+  file:
+    path: '/root/khala'
+    state: directory
+
+- name: Create a shared docker network
+  docker_network:
+    name: khala-node
+
+- name: Spin up docker
+  docker_compose:
+    project_name: 'node'
+    pull: yes
+    definition:
+        version: "3"
+        services:
+         pruntime:
+          image: phalanetwork/phala-pruntime
+          container_name: pruntime
+          hostname: pruntime
+          ports:
+          - "8000:8000"
+          devices:
+            - /dev/sgx_enclave
+            - /dev/sgx_provision
+          environment:
+          - EXTRA_OPTS=--cores={{ ansible_processor_vcpus }}
+          - ROCKET_ADDRESS=0.0.0.0
+          volumes:
+          - /root/khala/khala-pruntime-data:/root/data
+        networks: 
+          default: 
+            external: 
+              name: khala-node
+  register: output
+
+- ansible.builtin.debug:
+    var: output
+
+- ansible.builtin.assert:
+    that:
+        - "output.services.pruntime.pruntime.state.running"

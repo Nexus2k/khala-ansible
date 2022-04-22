@@ -3,14 +3,14 @@
 [node]
 my_node ansible_host=<IP of your server>
 
-[pbr]
-my_pbr ansible_host=<IP of your server>
+[prb]
+my_prb ansible_host=<IP of your server>
 
 [worker]
 my_worker ansible_host=<IP of your server>
 
 # Common variables
 [all:vars]
-ansible_ssh_common_args='-o StrictHostKeyChecking=no -o Port=2222 -o ConnectTimeout=15'
+ansible_ssh_common_args='-o StrictHostKeyChecking=no -o ConnectTimeout=15'
 ansible_user=root
 ansible_python_interpreter=/usr/bin/python3

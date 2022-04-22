@@ -1,0 +1,6 @@
+---
+- name: setup-worker
+  hosts: worker
+  become: yes
+  roles: 
+  - khala-worker
