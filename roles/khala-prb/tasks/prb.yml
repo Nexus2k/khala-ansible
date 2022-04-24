@@ -55,6 +55,7 @@
               - "28889:28889"
               - "18888:18888"
               - "18889:18889"
+              - "8012:8012" # blob server
           monitor:
             image: phalanetwork/prb-monitor:next
             hostname: monitor

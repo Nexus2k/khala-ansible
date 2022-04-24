@@ -25,6 +25,9 @@
           image: phalanetwork/phala-pruntime
           container_name: pruntime
           hostname: pruntime
+          logging:
+            options:
+              max-size: "500m"
           ports:
           - "8000:8000"
           devices:
