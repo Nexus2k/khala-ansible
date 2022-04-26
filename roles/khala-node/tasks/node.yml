@@ -26,10 +26,10 @@
             container_name: phala-node
             hostname: phala-node
             ports:
-            - "127.0.0.1:9615:9615"
-            - "127.0.0.1:9616:9616"
-            - "127.0.0.1:9944:9944"
-            - "127.0.0.1:9945:9945"
+            - "{{ vpn_ip if vpn_ip else "127.0.0.1" }}:9615:9615"
+            - "{{ vpn_ip if vpn_ip else "127.0.0.1" }}:9616:9616"
+            - "{{ vpn_ip if vpn_ip else "127.0.0.1" }}:9944:9944"
+            - "{{ vpn_ip if vpn_ip else "127.0.0.1" }}:9945:9945"
             - "30333:30333"
             - "30334:30334"
             environment:
