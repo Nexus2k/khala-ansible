@@ -51,11 +51,11 @@
               - "--harmony-top-level-await"
               - "dist/index"
             ports:
-              - "{{ vpn_ip + ":" if vpn_ip else "" }}28888:28888"
-              - "{{ vpn_ip + ":" if vpn_ip else "" }}28889:28889"
-              - "{{ vpn_ip + ":" if vpn_ip else "" }}18888:18888"
-              - "{{ vpn_ip + ":" if vpn_ip else "" }}18889:18889"
-              - "{{ vpn_ip + ":" if vpn_ip else "" }}8012:8012" # blob server
+              - "{{ vpn_ip + ':' if vpn_ip else '' }}28888:28888"
+              - "{{ vpn_ip + ':' if vpn_ip else '' }}28889:28889"
+              - "{{ vpn_ip + ':' if vpn_ip else '' }}18888:18888"
+              - "{{ vpn_ip + ':' if vpn_ip else '' }}18889:18889"
+              - "{{ vpn_ip + ':' if vpn_ip else '' }}8012:8012" # blob server
           monitor:
             image: phalanetwork/prb-monitor:next
             hostname: monitor
@@ -64,7 +64,7 @@
               - NEXT_PUBLIC_NS_LIST=default
               - PTP_BOOT_NODES=/ip4/127.0.0.1/tcp/28888
             ports:
-              - "{{ vpn_ip + ":" if vpn_ip else "" }}3000:3000"
+              - "{{ vpn_ip + ':' if vpn_ip else '' }}3000:3000"
           redis:
             image: redis:alpine
             hostname: redis
@@ -88,7 +88,7 @@
               - PHALA_NAMESPACE=default
               - REDIS_ENDPOINT=redis://prb_redis_1:63792/
             ports:
-              - "{{ vpn_ip + ":" if vpn_ip else "" }}4567:4567"
+              - "{{ vpn_ip + ':' if vpn_ip else '' }}4567:4567"
           trade:
             image: phalanetwork/prb:next
             hostname: trade
@@ -152,8 +152,8 @@
               - "--harmony-top-level-await"
               - "dist/index"
             ports:
-              - "{{ vpn_ip + ":" if vpn_ip else "" }}29888:29888"
-              - "{{ vpn_ip + ":" if vpn_ip else "" }}29889:29889"
+              - "{{ vpn_ip + ':' if vpn_ip else '' }}29888:29888"
+              - "{{ vpn_ip + ':' if vpn_ip else '' }}29889:29889"
         networks: 
           default: 
             external: 

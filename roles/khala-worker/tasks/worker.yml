@@ -29,7 +29,7 @@
             options:
               max-size: "500m"
           ports:
-          - "{{ vpn_ip + ":" if vpn_ip else "" }}8000:8000"
+          - "{{ vpn_ip + ':' if vpn_ip else '' }}8000:8000"
           devices:
             - /dev/sgx_enclave
             - /dev/sgx_provision

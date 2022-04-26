@@ -1,0 +1,8 @@
+# Install/Download using ansible-galaxy install githubixx.ansible_role_wireguard
+
+---
+- name: setup-worker
+  hosts: vpn
+  become: yes
+  roles:
+    - githubixx.ansible_role_wireguard
