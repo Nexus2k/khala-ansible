@@ -9,6 +9,6 @@ wireguard_postdown:
   - iptables -D FORWARD -i %i -j ACCEPT
   - iptables -D FORWARD -o %i -j ACCEPT
 wireguard_unmanaged_peers:
-  client.example.com:
+  nexus2k-home:
     public_key: 3Zo8GaCzSDEipckPbyeFMEOZzxUfaGCd1cFeiA2gaB0=
     allowed_ips: 10.8.0.2/32
