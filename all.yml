@@ -1,11 +1,16 @@
 # This playbook deploys a full khala mining pool
 # You will need to register the pool and the workers afterward
 ---
+- name: Basic setup
+  hosts: worker
+  become: yes
+  roles:
+    - basic-setup
+
 - name: Setup node
   hosts: node
   become: yes
   roles:
-    - basic-setup
     - khala-node
 
 - name: Setup prb

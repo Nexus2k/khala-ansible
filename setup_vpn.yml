@@ -1,4 +1,4 @@
-# Install/Download using ansible-galaxy install githubixx.ansible_role_wireguard
+# Install/Download using `ansible-galaxy install githubixx.ansible_role_wireguard`
 
 ---
 - name: setup-worker

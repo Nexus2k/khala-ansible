@@ -24,7 +24,8 @@
          pruntime:
           image: phalanetwork/phala-pruntime
           container_name: pruntime
-          hostname: pruntime
+          hostname: '{{ inventory_hostname }}-pruntime'
+          restart: always
           logging:
             options:
               max-size: "500m"
@@ -34,7 +35,7 @@
             - /dev/sgx_enclave
             - /dev/sgx_provision
           environment:
-          - EXTRA_OPTS=--cores={{ ansible_processor_vcpus }}
+          - EXTRA_OPTS=--cores={{ cpu_cores if cpu_cores is defined else ansible_processor_vcpus }}
           - ROCKET_ADDRESS=0.0.0.0
           volumes:
           - /root/khala/khala-pruntime-data:/root/data

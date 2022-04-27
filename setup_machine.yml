@@ -1,17 +1,5 @@
 ---
-- name: setup-node
-  hosts: node
-  become: yes
-  roles:
-  - basic-setup
-
-- name: setup-pbr
-  hosts: pbr
-  become: yes
-  roles:
-  - basic-setup
-
-- name: setup-worker
+- name: setup machine 
   hosts: worker
   become: yes
   roles:

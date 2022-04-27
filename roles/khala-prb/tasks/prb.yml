@@ -59,6 +59,7 @@
           monitor:
             image: phalanetwork/prb-monitor:next
             hostname: monitor
+            restart: always
             environment:
               - NS_FETCH=fetch
               - NEXT_PUBLIC_NS_LIST=default

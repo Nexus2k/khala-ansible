@@ -1,18 +1,29 @@
 ---
-- name: Install required system packages
-  apt: name={{ item }} state=latest update_cache=yes
-  loop: [ 'apt-transport-https', 'ca-certificates', 'curl', 'software-properties-common', 'python3-pip', 'virtualenv', 'python3-setuptools', 'jq', 'curl', 'wget', 'dkms']
+- name: Install rustup
+  shell: "curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs > rustup.sh && chmod +x rustup.sh && ./rustup.sh -y"
 
-- name: Add Docker GPG apt Key
+- name: Install nightly rust
+  shell: ". /root/.cargo/env && rustup default nightly"
+
+- name: Add fortanix target
+  shell: ". /root/.cargo/env && rustup target add x86_64-fortanix-unknown-sgx --toolchain nightly"
+
+- name: Add fortanix repo
+  shell: 'echo "" | sudo tee -a /etc/apt/sources.list.d/fortanix.list'
+
+- name: Add Fortanix GPG apt Key
   apt_key:
-    url: https://download.01.org/intel-sgx/sgx_repo/ubuntu/intel-sgx-deb.key
+    url: https://download.fortanix.com/linux/apt/fortanix.gpg
     state: present
 
-- name: Add Docker Repository
+- name: Add Fortanix Repository
   apt_repository:
-    repo: deb [arch=amd64] https://download.01.org/intel-sgx/sgx_repo/ubuntu/ bionic stable
+    repo: deb https://download.fortanix.com/linux/apt xenial main
     state: present
 
 - name: Update apt and install intel-sgx-dkms & enclave libs
   apt: name={{ item }} state=latest
-  loop: [ 'intel-sgx-dkms', 'libsgx-enclave-common']
+  loop: [ 'intel-sgx-dkms' ]
+
+# - name: Reboot the machine
+#   reboot:
