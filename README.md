@@ -42,6 +42,6 @@ TODO: add more info
 
 ## Notes
 
-Monitoring is not yet covered in these ansible playbooks. Do NOT run a Polkadot/Kusama validator w/o proper monitoring or you will get slashed.
-
-You should not use `root` user on the server, instead replace the `ansible_user` field in `hosts.ini` with an unpriviledged user (which has docker rights).
+- Monitoring is not yet covered in these ansible playbooks. Do NOT run a Khala miner w/o proper monitoring or you will get slashed.
+- You should not use `root` user on the server, instead replace the `ansible_user` field in `hosts.ini` with an unpriviledged user (which has docker rights).
+- When the prb_lifecycle_1 container get's shutdown too quickly it might corrupt the pruntime workers. In that case one of the ways to recover is to copy back the checkpoint.seal.bck file but if that's also corrupt you have to start synching from scratch!!
