@@ -24,21 +24,32 @@ Prerequisits:
 
 *  Node: Runs the Khala/Kusama node, needs about 1T of disk space
 *  PBR: Runs the Phala Bridge Runtime, needs another 1T of disk space, usually runs on the same host as the node
-*  Worker: Runs the Phala pruntime, needs SGX compatibility
+*  Worker: Runs the Phala pruntime, needs SGX compatibility (you can run a worker on the same machine like Node & PBR but make sure to reduce the number of CPUs used by the worker on that machine using the `cpu_cores` attribute)
+*  **Lots of time**: The Node synchs for about 3-5 days, then the data_provider for another 2-3 days and then each worker/miner for another 2-3 days depending on CPU/network specs.
 
 First copy the `hosts.ini-sample` to `hosts.ini` then:
 
 1.  Rename the `my_*` entries to a name you like, also replace the `<IP of your server>` with the actual IP of your server
+1.  Create one file per host in the inventory in the `host_vars` dir according to the sample. Only the node machine needs the `wireguard_unmanaged_peers:` entry.
+1.  Run the ansible playbooks in this order:
 
-## Deployment
+- setup_vpn.yml - Set's up the Wireguard VPN
+- setup_machine.yml - Installs some base packages that are needed including sgx on the workers
+- setup_node.yml - Setups the phala/kusama node
+- setup_prb.yml - Setups the PRB stack
+- setup_worker.yml - Setups the worker/miner servers
 
-If you feel adventerous you can deploy the whole server using:
+## Pool operations
 
-```
-$ ansible-playbook -i hosts.ini all.yml
-```
+You will need to check for the following, each step has to complete before you even need to bother to check for the next one, **it will take several days!!**:
 
-TODO: add more info
+1.  The node compoenent (phala-node container) needs to be fully synched. (Logs should say Idle and not Synching for both Parachain and Parentchain).
+1.  Connect to the wireguard VPN to be able to access the internal IPs.
+1.  The data_provider component will need to be fully synced, check by browsing to http://10.8.0.1:3000/ (monitor container), it should show the discovered data_provider -> Status it also has to go to `S_IDLE`.
+1.  In the lifecycle component you will now need to add the name, pool id, mnemonic seed phrase to setup the pool, then under Workers you will need to add the workers with the same pool id (pid), the pruntime endpoint (http://10.8.0.X:8000) and the maximum stake that worker should receive.
+1.  Restart the lifecycle manager container after that using `docker restart prb_lifecycle_1 -t 60`.
+1.  The miners will then start synching (takes another 2-3 days!!)
+1.  If anything hangs too long try to restart the `phala-node` container, it will restart the prb components automatically.
 
 ## Notes
 

@@ -1,2 +1,2 @@
 hosts.ini
-host_vars/*
+host_vars/gdot*

@@ -1,13 +1,20 @@
 # Make sure to have a corresponding yml file in the host_vars folder for each server here!
 
-[node]
+[vpn]
 my_node ansible_host=<IP of your server>
+my_prb ansible_host=<IP of your server>
+my_worker1 ansible_host=<IP of your server>
+my_worker2 ansible_host=<IP of your server>
+
+[node]
+my_node ansible_host=<IP of your server> vpn_ip=10.8.0.1
 
 [prb]
-my_prb ansible_host=<IP of your server>
+my_prb ansible_host=<IP of your server> vpn_ip=10.8.0.1
 
 [worker]
-my_worker ansible_host=<IP of your server>
+my_worker1 ansible_host=<IP of your server> vpn_ip=10.8.0.1 cpu_cores=14
+my_worker2 ansible_host=<IP of your server> vpn_ip=10.8.0.2
 
 # Common variables
 [all:vars]

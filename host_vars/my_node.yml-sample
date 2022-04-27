@@ -1,0 +1,12 @@
+wireguard_address: "10.8.0.1/16"
+wireguard_endpoint: "<IP of your server>"
+wireguard_persistent_keepalive: "30"
+wireguard_allowed_ips: "10.8.0.0/16"
+wireguard_postup:
+  - sudo sysctl -w net.ipv4.ip_forward=1
+wireguard_postdown:
+  - sudo sysctl -w net.ipv4.ip_forward=0
+wireguard_unmanaged_peers:
+  <my home pc>:
+    public_key: <my home wireguard pub key>
+    allowed_ips: 10.8.1.2/32
