@@ -142,7 +142,7 @@
               - PHALA_PRPC_REQUEST_TIMEOUT=60000
               - PHALA_RUNNER_MAX_WORKER_NUMBER=150
               # - PHALA_WALKIE_BOOT_NODES=/ip4/<IP of data_provider>/tcp/28888/p2p/<Data provider id as discovered by monitor>
-              - PHALA_WALKIE_BOOT_NODES=/ip4/{{ vpn_ip if vpn_ip else ansible_default_ipv4.address }}/tcp/28888/p2p/QmY9xUz1YeAKvQiL7ZYHhFQAbTEZDWuK1Qtjcynity58Wr
+              - PHALA_WALKIE_BOOT_NODES=/ip4/{{ vpn_ip if vpn_ip else ansible_default_ipv4.address }}/tcp/28888/p2p/{{ data_provider_pubkey if data_provider_pubkey is defined else '' }}
               - PHALA_WALKIE_LISTEN_ADDRESSES=/ip4/0.0.0.0/tcp/29888,/ip6/::/tcp/29889
             mem_swappiness: 70
             entrypoint:
