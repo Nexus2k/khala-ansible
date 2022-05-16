@@ -1,0 +1,7 @@
+- name: "enable IP forwarding"
+  sysctl:
+    name: "net.ipv4.ip_forward"
+    value: 1
+    state: present
+    reload: yes
+    sysctl_set: yes

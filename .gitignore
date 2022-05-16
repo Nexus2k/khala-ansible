@@ -1,2 +1,4 @@
-hosts.ini
-host_vars/gdot*
+hosts*
+!hosts.ini-sample
+host_vars/*
+!host_vars/my_node.yml-sample

@@ -7,6 +7,8 @@
   roles:
     - basic-setup
 
+# The next step will fail if you didn't run setup_vpn.yml first!
+
 - name: Setup node
   hosts: node
   become: yes
@@ -17,12 +19,11 @@
   hosts: prb
   become: yes
   roles:
-    - khala-node
+    - khala-prb
 
 - name: Setup worker
   hosts: worker
   become: yes
   roles:
-    - basic-setup
     - setup-sgx
     - khala-worker

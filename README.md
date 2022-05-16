@@ -34,10 +34,11 @@ First copy the `hosts.ini-sample` to `hosts.ini` then:
 1.  Run the ansible playbooks in this order:
 
 - setup_vpn.yml - Set's up the Wireguard VPN
-- setup_machine.yml - Installs some base packages that are needed including sgx on the workers
-- setup_node.yml - Setups the phala/kusama node
-- setup_prb.yml - Setups the PRB stack
-- setup_worker.yml - Setups the worker/miner servers
+- all.yml - runs the following steps:
+    - setup_machine.yml - Installs some base packages that are needed including sgx on the workers
+    - setup_node.yml - Setups the phala/kusama node
+    - setup_prb.yml - Setups the PRB stack
+    - setup_worker.yml - Setups the worker/miner servers
 
 ## Pool operations
 
