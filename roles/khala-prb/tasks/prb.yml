@@ -104,9 +104,6 @@
             environment:
               - PHALA_MODULE=trade
               - NODE_ENV=development
-              #- PHALA_DB_NAMESPACE=default
-              #- PHALA_DB_FETCH_NAMESPACE=fetch
-              #- PHALA_DB_ENDPOINT=redis://127.0.0.1:6666
               - PHALA_LOGGER_LEVEL=debug
               - PHALA_PARENT_CHAIN_ENDPOINT=ws://phala-node:9945
               - PHALA_CHAIN_ENDPOINT=ws://phala-node:9944

@@ -33,12 +33,14 @@ First copy the `hosts.ini-sample` to `hosts.ini` then:
 1.  Create one file per host in the inventory in the `host_vars` dir according to the sample. Only the node machine needs the `wireguard_unmanaged_peers:` entry.
 1.  Run the ansible playbooks in this order:
 
+- create_vpn_config.yml
 - setup_vpn.yml - Set's up the Wireguard VPN
 - all.yml - runs the following steps:
     - setup_machine.yml - Installs some base packages that are needed including sgx on the workers
     - setup_node.yml - Setups the phala/kusama node
     - setup_prb.yml - Setups the PRB stack
     - setup_worker.yml - Setups the worker/miner servers
+- add_workers.yml - Adds all defined workers to the lifecycle manager (update the lifecycle_pubkey first!)
 
 ## Pool operations
 

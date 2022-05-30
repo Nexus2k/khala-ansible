@@ -1,5 +1,5 @@
 ---
-- name: Setup watchtower on validator 1
+- name: Setup watchtower on workers
   hosts: worker
   become: yes
   roles:

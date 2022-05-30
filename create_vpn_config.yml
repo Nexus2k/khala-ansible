@@ -1,0 +1,6 @@
+---
+- name: generate VPN config
+  hosts: localhost
+  connection: local
+  roles:
+    - vpn-config 

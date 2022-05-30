@@ -10,7 +10,7 @@ my_worker2 ansible_host=<IP of your server>
 my_node ansible_host=<IP of your server> vpn_ip=10.8.0.1
 
 [prb]
-my_prb ansible_host=<IP of your server> vpn_ip=10.8.0.1 data_provider_pubkey=<Data provider pubkey from monitor UI>
+my_prb ansible_host=<IP of your server> vpn_ip=10.8.0.1 data_provider_pubkey=<Data provider pubkey from monitor UI> lifecycle_pubkey=<lifecycle pubkey from monitor UI> pool_id=<your pool id>
 
 [worker]
 my_worker1 ansible_host=<IP of your server> vpn_ip=10.8.0.1 cpu_cores=14

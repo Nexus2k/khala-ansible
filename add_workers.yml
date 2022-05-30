@@ -1,0 +1,6 @@
+---
+- name: add worker to prb
+  hosts: prb
+  become: yes
+  roles: 
+  - khala-worker-add

@@ -1,0 +1,6 @@
+- name: Create VPN config
+  ansible.builtin.template:
+    src: templates/vpn-conf.yml
+    dest: host_vars/{{ item }}.yml
+  with_items: 
+  - "{{ groups['worker'] }}"
