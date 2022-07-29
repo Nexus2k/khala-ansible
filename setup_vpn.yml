@@ -1,7 +1,7 @@
 # Install/Download using `ansible-galaxy install githubixx.ansible_role_wireguard`
 
 ---
-- name: setup-worker
+- name: setup vpn between all machines 
   hosts: vpn
   become: yes
   roles:

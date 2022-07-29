@@ -1,0 +1,43 @@
+- name: Create backup directory
+  ansible.builtin.file:
+    path: backup
+    state: directory
+  register: local_dir
+  delegate_to: localhost
+  become: no
+
+- name: Create relaychain directory
+  ansible.builtin.file:
+    path: backup/{{ inventory_hostname }}/relaychain/
+    state: directory
+  register: local_dir
+  delegate_to: localhost
+  become: no
+
+- name: backup relaychain keys
+  synchronize:  
+    src: '{{ item }}' 
+    dest: backup/{{ inventory_hostname }}/relaychain/ 
+    mode: pull
+    use_ssh_args: yes
+  with_items:
+    - "/root/khala/polkadot/chains/ksmcc3/keystore"
+    - "/root/khala/polkadot/chains/ksmcc3/network"
+
+- name: Create parachain directory
+  ansible.builtin.file:
+    path: backup/{{ inventory_hostname }}/parachain/
+    state: directory
+  register: local_dir
+  delegate_to: localhost
+  become: no
+
+- name: backup parachain keys
+  synchronize:  
+    src: '{{ item }}' 
+    dest: backup/{{ inventory_hostname }}/parachain/
+    mode: pull
+    use_ssh_args: yes
+  with_items:
+    - "/root/khala/chains/khala/keystore"
+    - "/root/khala/chains/khala/network"

@@ -1,0 +1,13 @@
+---
+- name: Backup node keys
+  hosts: node
+  become: yes
+  roles: 
+  - khala-backup-keys
+
+- name: Backup worker keys
+  hosts: worker
+  become: yes
+  roles: 
+  - khala-backup-pruntime-keys
+

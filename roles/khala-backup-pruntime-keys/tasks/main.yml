@@ -1,0 +1,16 @@
+- name: Create pruntime directory
+  ansible.builtin.file:
+    path: backup/{{ inventory_hostname }}/pruntime/
+    state: directory
+  register: local_dir
+  delegate_to: localhost
+  become: no
+
+- name: backup worker keys
+  synchronize:  
+    src: '{{ item }}' 
+    dest: backup/{{ inventory_hostname }}/pruntime
+    mode: pull
+    use_ssh_args: yes
+  with_items:
+    - "/root/khala/khala-pruntime-data"
