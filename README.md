@@ -58,7 +58,7 @@ You will need to check for the following, each step has to complete before you e
 
 - Monitoring is not yet covered in these ansible playbooks. Do NOT run a Khala miner w/o proper monitoring or you will get slashed.
 - You should not use `root` user on the server, instead replace the `ansible_user` field in `hosts.ini` with an unpriviledged user (which has docker rights).
-- [s]When the pruntime containers get's shutdown too quickly it might corrupt the pruntime workers. In that case one of the ways to recover is to copy back the checkpoint.seal.bck file but if that's also corrupt you have to start synching from scratch!![/s] - Just restart the worker in the Lifecycle UI
+- ~~When the pruntime containers get's shutdown too quickly it might corrupt the pruntime workers. In that case one of the ways to recover is to copy back the checkpoint.seal.bck file but if that's also corrupt you have to start synching from scratch!!~~ - Just restart the worker in the Lifecycle UI
 
 ## Downgrade Ubuntu 22.04 LTS kernel to 5.13
 
