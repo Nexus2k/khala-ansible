@@ -13,4 +13,4 @@
     mode: pull
     use_ssh_args: yes
   with_items:
-    - "/root/khala/khala-pruntime-data"
+    - "/root/khala/khala-{{ inventory_hostname }}-pruntime-data"
