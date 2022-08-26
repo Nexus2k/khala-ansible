@@ -58,4 +58,34 @@ You will need to check for the following, each step has to complete before you e
 
 - Monitoring is not yet covered in these ansible playbooks. Do NOT run a Khala miner w/o proper monitoring or you will get slashed.
 - You should not use `root` user on the server, instead replace the `ansible_user` field in `hosts.ini` with an unpriviledged user (which has docker rights).
-- When the prb_lifecycle_1 container get's shutdown too quickly it might corrupt the pruntime workers. In that case one of the ways to recover is to copy back the checkpoint.seal.bck file but if that's also corrupt you have to start synching from scratch!!
+- [s]When the pruntime containers get's shutdown too quickly it might corrupt the pruntime workers. In that case one of the ways to recover is to copy back the checkpoint.seal.bck file but if that's also corrupt you have to start synching from scratch!![/s] - Just restart the worker in the Lifecycle UI
+
+## Downgrade Ubuntu 22.04 LTS kernel to 5.13
+
+```
+wget https://raw.githubusercontent.com/pimlie/ubuntu-mainline-kernel.sh/master/ubuntu-mainline-kernel.sh
+chmod +x ubuntu-mainline-kernel.sh
+
+# search and find your wanted version
+ubuntu-mainline-kernel.sh -r | grep 5.13
+
+# install that version kernel
+ubuntu-mainline-kernel.sh -i v5.13.19
+
+# get all menuentries
+grep 'menuentry \|submenu ' /boot/grub/grub.cfg | cut -f2 -d "'"
+
+# change the grub configuration
+vi /etc/default/grub
+from: GRUB_DEFAULT=0
+to: GRUB_DEFAULT="Advanced options for Ubuntu>Ubuntu, with Linux 5.13.19-051319-generic"
+
+# update grub
+update-grub
+
+# reboot
+reboot now
+
+# verify
+uname -r
+```

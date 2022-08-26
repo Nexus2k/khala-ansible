@@ -8,7 +8,7 @@
                 {
                     "pid": {{ pool_id }},
                     "name": "{{ item }}",
-                    "endpoint": "http://{{ hostvars[item].vpn_ip }}:8000",
+                    "endpoint": "http://{{ hostvars[item].vpn_ip }}:{{ hostvars[item].worker_port if hostvars[item].worker_port else "8000" }}",
                     "enabled": true,
                     "syncOnly": true,
                     "stake": "18000000000000000"

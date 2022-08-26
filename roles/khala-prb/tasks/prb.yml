@@ -90,7 +90,7 @@
               - PHALA_BRIDGE_IDENTITY=production
               - PHALA_Q_REDIS_ENDPOINT=redis://prb_redis_1:63792/
               - PHALA_PARENT_CHAIN_ENDPOINT=ws://phala-node:9945
-              - PHALA_CHAIN_ENDPOINT=ws://phala-node:9944      
+              - PHALA_CHAIN_ENDPOINT=ws://phala-node:9944
               - PHALA_LRU_CACHE_SIZE=50
               - PHALA_LRU_CACHE_MAX_AGE=90000
               - PHALA_RUNNER_MAX_WORKER_NUMBER=100

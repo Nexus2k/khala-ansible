@@ -1,7 +1,7 @@
 ---
 - name: Clean running worker
   docker_container:
-    name: 'pruntime'
+    name: '{{ inventory_hostname }}-pruntime'
     state: absent
   ignore_errors: yes
 
@@ -16,29 +16,29 @@
 
 - name: Spin up docker
   docker_compose:
-    project_name: 'node'
+    project_name: '{{ inventory_hostname }}-pruntime'
     pull: yes
     definition:
         version: "3"
         services:
-         pruntime:
-          image: phalanetwork/phala-pruntime
-          container_name: pruntime
-          hostname: '{{ inventory_hostname }}-pruntime'
-          restart: always
-          logging:
-            options:
-              max-size: "500m"
-          ports:
-          - "{{ vpn_ip + ':' if vpn_ip else '' }}8000:8000"
-          devices:
-            - /dev/sgx_enclave
-            - /dev/sgx_provision
-          environment:
-          - EXTRA_OPTS=--cores={{ cpu_cores if cpu_cores is defined else ansible_processor_vcpus }}
-          - ROCKET_ADDRESS=0.0.0.0
-          volumes:
-          - /root/khala/khala-pruntime-data:/root/data
+          pruntime:
+            image: phalanetwork/phala-pruntime
+            container_name: "{{ inventory_hostname.replace('-','_') }}_pruntime"
+            hostname: '{{ inventory_hostname }}-pruntime'
+            restart: always
+            logging:
+              options:
+                max-size: "500m"
+            ports:
+            - "{{ vpn_ip + ':' if vpn_ip else '' }}{{ worker_port if worker_port else '8000' }}:8000"
+            devices:
+              - /dev/sgx_enclave
+              - /dev/sgx_provision
+            environment:
+            - EXTRA_OPTS=--cores={{ cpu_cores if cpu_cores is defined else ansible_processor_vcpus }}
+            - ROCKET_ADDRESS=0.0.0.0
+            volumes:
+            - /root/khala/khala-{{ inventory_hostname }}-pruntime-data:/root/data
         networks: 
           default: 
             external: 
@@ -50,4 +50,4 @@
 
 - ansible.builtin.assert:
     that:
-        - "output.services.pruntime.pruntime.state.running"
+        - "output.services.pruntime.{{ inventory_hostname.replace('-','_') }}_pruntime.state.running"
