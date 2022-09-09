@@ -1,0 +1,7 @@
+---
+- name: Move pruntime dirs
+  hosts: worker
+  become: yes
+  roles: 
+  - khala-move-pruntime
+

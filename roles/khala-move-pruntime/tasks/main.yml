@@ -1,0 +1,11 @@
+- name: Clean running worker
+  docker_container:
+    name: "{{ inventory_hostname.replace('-','_') }}_pruntime"
+    state: absent
+  ignore_errors: yes
+
+- name: Copy pruntime
+  ansible.builtin.copy:
+    src: /root/khala/khala-pruntime-data/
+    dest: /root/khala/khala-{{ inventory_hostname }}-pruntime-data/
+    remote_src: yes

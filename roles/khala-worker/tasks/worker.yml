@@ -1,7 +1,7 @@
 ---
 - name: Clean running worker
   docker_container:
-    name: '{{ inventory_hostname }}-pruntime'
+    name: "{{ inventory_hostname.replace('-','_') }}_pruntime"
     state: absent
   ignore_errors: yes
 

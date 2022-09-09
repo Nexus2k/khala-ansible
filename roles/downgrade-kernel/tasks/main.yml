@@ -1,0 +1,21 @@
+- name: Download ubuntu kernel script
+  ansible.builtin.get_url:
+    url: https://raw.githubusercontent.com/pimlie/ubuntu-mainline-kernel.sh/master/ubuntu-mainline-kernel.sh
+    dest: /root/ubuntu-mainline-kernel.sh
+    mode: '0755'
+
+- name: Download & install kernel
+  ansible.builtin.shell: /root/ubuntu-mainline-kernel.sh -i v5.13.19
+
+- name: "Replace line in file examples"
+  replace: 
+    path: /etc/default/grub
+    regexp: '(^GRUB_DEFAULT=)(.*)$'
+    replace: '\1"Advanced options for Ubuntu>Ubuntu, with Linux 5.13.19-051319-generic"'
+    backup: yes
+
+- name: Update grub
+  ansible.builtin.shell: update-grub
+
+- name: Reboot machine
+  ansible.builtin.reboot:

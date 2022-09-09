@@ -67,10 +67,10 @@ wget https://raw.githubusercontent.com/pimlie/ubuntu-mainline-kernel.sh/master/u
 chmod +x ubuntu-mainline-kernel.sh
 
 # search and find your wanted version
-ubuntu-mainline-kernel.sh -r | grep 5.13
+./ubuntu-mainline-kernel.sh -r | grep 5.13
 
 # install that version kernel
-ubuntu-mainline-kernel.sh -i v5.13.19
+./ubuntu-mainline-kernel.sh -i v5.13.19
 
 # get all menuentries
 grep 'menuentry \|submenu ' /boot/grub/grub.cfg | cut -f2 -d "'"
