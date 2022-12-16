@@ -93,7 +93,7 @@
               - PHALA_CHAIN_ENDPOINT=ws://phala-node:9944
               - PHALA_LRU_CACHE_SIZE=50
               - PHALA_LRU_CACHE_MAX_AGE=90000
-              - PHALA_RUNNER_MAX_WORKER_NUMBER=100
+              - PHALA_RUNNER_MAX_WORKER_NUMBER=210
               - PHALA_PRPC_REQUEST_TIMEOUT=60000
               # - PHALA_WALKIE_BOOT_NODES=/ip4/<IP of data_provider>/tcp/28888/p2p/<Data provider id as discovered by monitor>
               - PHALA_WALKIE_BOOT_NODES=/ip4/{{ vpn_ip if vpn_ip else ansible_default_ipv4.address }}/tcp/28888/p2p/{{ data_provider_pubkey if data_provider_pubkey is defined else '' }}

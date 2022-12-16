@@ -18,7 +18,7 @@
                 - /var/run/docker.sock:/var/run/docker.sock
               command: --interval 300
               hostname: 'watchtower'
-              restart: unless-stopped
+              restart: always
   register: output
 
 - ansible.builtin.debug:

@@ -37,6 +37,7 @@
             - NODE_ROLE=MINER
             volumes:
             - /root/khala:/root/data
+            - /opt/khala/polkadot:/root/data/polkadot
             restart: unless-stopped
         networks: 
           default: 

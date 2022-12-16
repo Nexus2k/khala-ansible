@@ -32,8 +32,8 @@
             ports:
             - "{{ vpn_ip + ':' if vpn_ip else '' }}{{ worker_port if worker_port else '8000' }}:8000"
             devices:
-              - /dev/sgx_enclave
-              - /dev/sgx_provision
+              - /dev/sgx_enclave:/dev/sgx/enclave 
+              - /dev/sgx_provision:/dev/sgx/provision
             environment:
             - EXTRA_OPTS=--cores={{ cpu_cores if cpu_cores is defined else ansible_processor_vcpus }}
             - ROCKET_ADDRESS=0.0.0.0

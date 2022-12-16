@@ -21,8 +21,8 @@
     mode: pull
     use_ssh_args: yes
   with_items:
-    - "/root/khala/polkadot/chains/ksmcc3/keystore"
-    - "/root/khala/polkadot/chains/ksmcc3/network"
+    - "/opt/khala/polkadot/chains/ksmcc3/keystore"
+    - "/opt/khala/polkadot/chains/ksmcc3/network"
 
 - name: Create parachain directory
   ansible.builtin.file:
