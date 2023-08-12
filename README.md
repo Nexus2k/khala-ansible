@@ -4,6 +4,7 @@ Ansible scripts to deploy a khala mining pool.
 ## Setup/Component Overview
 
 ![Phala networking](https://user-images.githubusercontent.com/688267/164886024-fbada31e-fb01-4a66-9b1e-c534d1167ac5.svg)
+This graphic is outdated, there's only the WM (worker manager) & monitor left with PRBv3.
 
 ## ToDo's for contributors
 
