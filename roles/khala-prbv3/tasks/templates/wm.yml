@@ -1,0 +1,3 @@
+- name: local-prb
+  endpoint: http://{{ vpn_ip }}:3001
+  proxied: true

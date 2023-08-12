@@ -3,4 +3,4 @@
   hosts: prb
   become: yes
   roles:
-  - khala-prb
+  - khala-prbv3

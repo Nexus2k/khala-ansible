@@ -36,7 +36,7 @@
             - NODE_NAME={{ inventory_hostname }}
             - NODE_ROLE=MINER
             volumes:
-            - /root/khala:/root/data
+            - /opt/khala/:/root/data
             - /opt/khala/polkadot:/root/data/polkadot
             restart: unless-stopped
         networks: 

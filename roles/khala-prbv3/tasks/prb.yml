@@ -1,0 +1,83 @@
+---
+- name: Clean running prb containers
+  docker_container:
+    name: '{{ item }}'
+    state: absent
+  ignore_errors: yes
+  loop: ['prb_monitor_1','prb_monitor_v3_1','prb_wm_1']
+
+- name: Setup data path
+  file:
+    path: '/root/khala'
+    state: directory
+
+- name: Setup prbv3 path
+  file:
+    path: '/root/khala/prbv3_data/prb-wm-data'
+    state: directory
+
+- name: create file wm.yml
+  template:
+    src: wm.yml
+    dest: /root/khala/prbv3_data/wm.yml
+    mode: 0644
+    owner: root
+    group: root
+
+- name: create file ds.yml
+  template:
+    src: ds.yml
+    dest: /root/khala/prbv3_data/prb-wm-data/ds.yml
+    mode: 0644
+    owner: root
+    group: root
+
+- name: Create a shared docker network
+  docker_network:
+    name: khala-node
+
+- name: Spin up docker
+  docker_compose:
+    project_name: 'prb'
+    pull: yes
+    definition:
+        version: "3"
+        services:
+          wm:
+            image: phalanetwork/prb3:dev
+            hostname: prb-local
+            restart: always
+            logging:
+              options:
+                max-size: "1g"
+            environment:
+              - MGMT_LISTEN_ADDRESSES=0.0.0.0:3001
+              - RUST_BACKTRACE=1
+              - RUST_LOG=info,pherry=off,phactory_api=off,prb=info
+            ports:
+              - "{{ vpn_ip + ':' if vpn_ip else '' }}3001:3001"
+            volumes:
+              - /root/khala/prbv3_data/prb-wm-data:/var/data/prb-wm
+          monitor_v3:
+            image: phalanetwork/prb3-monitor:dev
+            restart: always
+            ports:
+              - "{{ vpn_ip + ':' if vpn_ip else '' }}3000:3000"
+            volumes:
+              - /root/khala/prbv3_data/wm.yml:/app/public/wm.yml
+        networks: 
+          default: 
+            external: 
+              name: khala-node
+  register: output
+
+- ansible.builtin.debug:
+    var: output
+
+- ansible.builtin.assert:
+    that:
+        - "output.services.wm.prb_wm_1.state.running"
+
+- ansible.builtin.assert:
+    that:
+        - "output.services.monitor_v3.prb_monitor_v3_1.state.running"

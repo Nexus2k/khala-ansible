@@ -1,0 +1,47 @@
+---
+- name: Clean running prb containers
+  docker_container:
+    name: '{{ item }}'
+    state: absent
+  ignore_errors: yes
+  loop: ['prb_data_provider_1','prb_monitor_1','prb_redis_1','prb_arena_1','prb_trade_1','prb_lifecycle_1']
+
+- name: Spin up docker
+  docker_compose:
+    project_name: 'prb'
+    pull: yes
+    definition:
+        version: "3"
+        x-defaults: &defaults
+          volumes: &default-volume-config
+            - /root/khala/prb_data:/var/data
+        services:
+          lifecycle:
+            image: phalanetwork/prb:git-current-v2
+            hostname: lifecycle
+            restart: "no"
+            volumes: *default-volume-config
+            logging:
+              options:
+                max-size: "500m"
+            environment:
+              - PRB3_API_ENDPOINT=http://{{ vpn_ip + ':' if vpn_ip else '' }}3001
+            mem_swappiness: 70
+            entrypoint:
+              - "yarn"
+              - "migrate_to_prb3"
+            ports:
+              - "{{ vpn_ip + ':' if vpn_ip else '' }}29888:29888"
+              - "{{ vpn_ip + ':' if vpn_ip else '' }}29889:29889"
+        networks: 
+          default: 
+            external: 
+              name: khala-node
+  register: output
+
+- ansible.builtin.debug:
+    var: output
+
+- ansible.builtin.assert:
+    that:
+        - "output.services.lifecycle.prb_lifecycle_1.state.running"

@@ -1,0 +1,7 @@
+---
+- name: migrate-prbv2-to-v3
+  hosts: prb
+  become: yes
+  roles:
+  - khala-prbv3
+  - khala-prbv2-to-v3
