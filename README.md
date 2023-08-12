@@ -96,6 +96,6 @@ To migrate to PRBv3 run the following playbook:
 
 `ansible-playbook -i hosts.ini migrate_prbv2-to-v3.yml`
 
-You then need to click the "Restart WM" button in the new UI at http://<vpn-ip>:3000
+You then need to click the "Restart WM" button in the new UI at `http://<vpn-ip>:3000`
 
 Afterwards the old /root/khala/prb_data folder can be deleted.
