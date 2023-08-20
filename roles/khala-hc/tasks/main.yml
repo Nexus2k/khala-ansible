@@ -1,0 +1,3 @@
+---
+- name: setup header-cache
+  import_tasks: hc.yml

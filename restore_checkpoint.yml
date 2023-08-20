@@ -1,0 +1,6 @@
+---
+- name: restore-checkpoint
+  hosts: worker
+  become: yes
+  roles: 
+  - khala-restore-checkpoint

@@ -1,0 +1,3 @@
+---
+- name: restore check-point
+  import_tasks: checkpoint.yml

@@ -1,0 +1,6 @@
+---
+- name: setup header-cache
+  hosts: prb
+  become: yes
+  roles:
+  - khala-hc

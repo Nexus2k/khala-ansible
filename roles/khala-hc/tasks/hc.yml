@@ -1,0 +1,52 @@
+---
+- name: Clean running prb containers
+  docker_container:
+    name: '{{ item }}'
+    state: absent
+  ignore_errors: yes
+  loop: ['header_cache_hc_1']
+
+- name: Setup data path
+  file:
+    path: '/root/khala'
+    state: directory
+
+- name: Spin up docker
+  docker_compose:
+    project_name: 'header_cache'
+    pull: yes
+    definition:
+        version: "3"
+        services:
+          hc:
+            image: jasl123/phala-headers-cache:23062301
+            hostname: hc
+            restart: always
+            volumes: 
+              - /root/khala/hc_data:/opt/headers-cache/data
+            logging:
+              options:
+                max-size: "500m"
+            entrypoint:
+              - "/opt/headers-cache/headers-cache"
+              - "serve"
+              - "--grab-headers" 
+              - "--grab-para-headers" 
+              - "--grab-storage-changes"
+              - "--node-uri=wss://kusama-rpc.polkadot.io:443"
+              - "--para-node-uri=wss://khala-api.phala.network:443/ws"
+              - "--db=/opt/headers-cache/data"
+            ports:
+              - "{{ vpn_ip + ':' if vpn_ip else '' }}9000:8000"
+        networks: 
+          default: 
+            external: 
+              name: khala-node
+  register: output
+
+- ansible.builtin.debug:
+    var: output
+
+- ansible.builtin.assert:
+    that:
+        - "output.services.hc.header_cache_hc_1.state.running"
