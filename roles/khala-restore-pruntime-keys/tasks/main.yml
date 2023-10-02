@@ -1,0 +1,52 @@
+- name: Clean running worker
+  docker_container:
+    name: "{{ inventory_hostname.replace('-','_') }}_pruntime"
+    state: absent
+  ignore_errors: yes
+
+- name: restore worker keys
+  synchronize:  
+    src: '{{ item }}' 
+    dest: /root/khala/
+    mode: push
+    use_ssh_args: yes
+  with_items:
+    - "backup/{{ inventory_hostname }}/pruntime/"
+
+- name: Spin up docker
+  docker_compose:
+    project_name: '{{ inventory_hostname }}-pruntime'
+    pull: yes
+    definition:
+        version: "3"
+        services:
+          pruntime:
+            image: phalanetwork/phala-pruntime
+            container_name: "{{ inventory_hostname.replace('-','_') }}_pruntime"
+            hostname: '{{ inventory_hostname }}-pruntime'
+            restart: always
+            logging:
+              options:
+                max-size: "500m"
+            ports:
+            - "{{ vpn_ip + ':' if vpn_ip else '' }}{{ worker_port if worker_port else '8000' }}:8000"
+            devices:
+              - /dev/sgx_enclave:/dev/sgx/enclave 
+              - /dev/sgx_provision:/dev/sgx/provision
+            environment:
+            - EXTRA_OPTS=--cores={{ cpu_cores if cpu_cores is defined else ansible_processor_vcpus }}
+            - ROCKET_ADDRESS=0.0.0.0
+            volumes:
+            - /root/khala/khala-{{ inventory_hostname }}-pruntime-data:/root/data
+        networks: 
+          default: 
+            external: 
+              name: khala-node
+  register: output
+
+- ansible.builtin.debug:
+    var: output
+
+- ansible.builtin.assert:
+    that:
+        - "output.services.pruntime.{{ inventory_hostname.replace('-','_') }}_pruntime.state.running"

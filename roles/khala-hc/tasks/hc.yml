@@ -26,7 +26,10 @@
               - /root/khala/hc_data:/opt/headers-cache/data
             logging:
               options:
-                max-size: "500m"
+                max-size: "50m"
+            environment:
+              - ROCKET_ADDRESS=0.0.0.0
+              - ROCKET_PORT=9000
             entrypoint:
               - "/opt/headers-cache/headers-cache"
               - "serve"
@@ -37,7 +40,7 @@
               - "--para-node-uri=wss://khala-api.phala.network:443/ws"
               - "--db=/opt/headers-cache/data"
             ports:
-              - "{{ vpn_ip + ':' if vpn_ip else '' }}9000:8000"
+              - "{{ vpn_ip + ':' if vpn_ip else '' }}9000:9000"
         networks: 
           default: 
             external: 
