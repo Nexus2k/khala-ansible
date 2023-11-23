@@ -1,20 +1,18 @@
 ---
 - name: Add worker
   uri:
-      url: http://{{ ansible_wg0.ipv4.address }}:3000/ptp/proxy/{{ lifecycle_pubkey }}/CreateWorker
+      url: "http://{{ ansible_wg0.ipv4.address }}:3000/api/p/http%3A%2F%2F{{ ansible_wg0.ipv4.address }}%3A3001/wm/config"
       method: POST
       body: '{
-            "workers": [
-                {
-                    "pid": {{ pool_id }},
-                    "name": "{{ item }}",
-                    "endpoint": "http://{{ hostvars[item].vpn_ip }}:{{ hostvars[item].worker_port if hostvars[item].worker_port else "8000" }}",
-                    "enabled": true,
-                    "syncOnly": true,
-                    "stake": "{{ hostvars[item].stake }}000000000000"
-                }
-            ]
-        }'
+             "AddWorker": {
+              "name": "{{ item }}",
+              "endpoint": "http://{{ hostvars[item].vpn_ip }}:{{ hostvars[item].worker_port if hostvars[item].worker_port else "8000" }}",
+              "stake": "{{ hostvars[item].stake }}000000000000",
+              "pid": {{ pool_id }},
+              "sync_only":true,
+              "disabled":false,
+              "gatekeeper":false
+             }}'
       body_format: json
       headers:
         Content-Type: "application/json"
